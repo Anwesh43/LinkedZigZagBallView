@@ -187,4 +187,27 @@ class ZigZagBallView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : ZigZagBallView) {
+
+        private val animator : Animator  = Animator(view)
+        private val zzb : ZigZagBall = ZigZagBall(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            zzb.draw(canvas, paint)
+            animator.animate {
+                zzb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            zzb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
