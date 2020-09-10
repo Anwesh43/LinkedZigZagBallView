@@ -11,6 +11,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.app.Activity
 import android.content.Context
+import android.util.Log
 
 val colors : Array<Int> = arrayOf(
         "#3F51B5",
@@ -28,18 +29,18 @@ val backColor : Int = Color.parseColor("#BDBDBD")
 
 fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
-fun Float.divideScale(i : Int, n : Int) : Float = Math.max(n.inverse(), maxScale(i, n)) * n
+fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
 
 fun Canvas.drawZigZagBall(scale : Float, w : Float, h : Float, paint : Paint) {
     val scFirst : Float = scale.divideScale(0, parts)
     val scLast : Float = scale.divideScale(parts - 1, parts)
     val r : Float = Math.min(w, h) / rFactor
-    val gap : Float = w
+    val gap : Float = (w - 2 * r) / divs
     save()
     translate(0f, h / 2)
     for (i in 0..1) {
-        var x : Float = 0f
+        var x : Float = r
         var y : Float = 0f
         save()
         scale(1f, 1f - 2 * i)
@@ -48,6 +49,8 @@ fun Canvas.drawZigZagBall(scale : Float, w : Float, h : Float, paint : Paint) {
             x += gap * scj
             y -= gap * scj.sinify()
         }
+//        Log.d("x", "$x")
+//        Log.d("y", "$y")
         drawCircle(x, y, r * (scFirst - scLast), paint)
         restore()
     }
