@@ -212,4 +212,13 @@ class ZigZagBallView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : ZigZagBallView {
+            val view : ZigZagBallView = ZigZagBallView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
